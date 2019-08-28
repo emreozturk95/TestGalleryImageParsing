@@ -4,28 +4,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -36,39 +29,38 @@ public class PickImageActivity extends AppCompatActivity {
     Button btnSave;
     private Uri imageUri;
     Bitmap bitmap;
-
-
-    public String bitMapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] b = baos.toByteArray();
-        String temp = Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
+    String base64String;
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        switch (requestCode) {
 
-            imageUri = data.getData();
+            case 1:
 
-            InputStream inputStream;
+                if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
 
-            try {
+                    imageUri = data.getData();
 
-                inputStream = getContentResolver().openInputStream(imageUri);
+                    InputStream inputStream;
 
-                bitmap = BitmapFactory.decodeStream(inputStream);
+                    try {
 
-                ivImage.setImageBitmap(bitmap);
+                        inputStream = getContentResolver().openInputStream(imageUri);
 
+                        bitmap = BitmapFactory.decodeStream(inputStream);
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "unable to open image", Toast.LENGTH_SHORT).show();
-            }
+                        base64String = BitMapUtil.bitMapToString(bitmap);
+
+                        ivImage.setImageURI(imageUri);
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "unable to open image", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
 
         }
 
@@ -84,9 +76,6 @@ public class PickImageActivity extends AppCompatActivity {
         ivImage = findViewById(R.id.imageView);
         etName = findViewById(R.id.etText);
         btnSave = findViewById(R.id.btnSave);
-
-
-
 
 
         ivImage.setOnClickListener(new View.OnClickListener() {
@@ -106,49 +95,34 @@ public class PickImageActivity extends AppCompatActivity {
                 }
 
             }
+
         });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
-                final SharedPreferences sharedPreferences = getSharedPreferences("com.example.testgalleryimageparsing", Context.MODE_PRIVATE);
+                try {
 
-                final SharedPreferences.Editor editor = sharedPreferences.edit();
+                    Intent returnIntent = new Intent();
 
-                editor.putString("bitmap", bitMapToString(bitmap));
+                    /*YÖNTEM 1
+                    returnIntent.putExtra("resultbase64", base64String.toString());
+                    returnIntent.putExtra("resultName", etName.getText().toString());
+                     */
 
+                    MyDataClass myDataClass = new MyDataClass(etName.getText().toString(), imageUri);
+                    returnIntent.putExtra("asd", myDataClass);
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
 
-                etName.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                        sharedPreferences.edit().putString("autoSave", editable.toString()).apply();
-
-                    }
-                });
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    Toast.makeText(PickImageActivity.this, "Fotoğraf seçilmedi", Toast.LENGTH_SHORT).show();
 
 
-
-
-
-//                editor.putString("name", etName);
-
-                editor.apply();
-
-                Intent intent = new Intent(PickImageActivity.this, ShowImageActivity.class);
-
-                startActivity(intent);
+                }
 
 
             }
@@ -156,4 +130,6 @@ public class PickImageActivity extends AppCompatActivity {
 
 
     }
+
+
 }

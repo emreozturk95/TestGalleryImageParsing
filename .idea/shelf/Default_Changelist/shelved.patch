@@ -1,0 +1,27 @@
+Index: app/src/main/res/layout/activity_show_image.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:background=\"@color/cardview_shadow_start_color\"\r\n    tools:context=\".ShowImageActivity\">\r\n\r\n\r\n    <TextView\r\n        android:id=\"@+id/tvBaslik\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"FOTOĞRAF ALBÜMÜ\"\r\n        android:fontFamily=\"serif\"\r\n        android:textSize=\"30sp\"\r\n        android:layout_marginTop=\"10dp\"\r\n        android:layout_marginBottom=\"10dp\"\r\n        android:gravity=\"center_horizontal\"\r\n        android:textColor=\"@color/colorPrimaryDark\"/>\r\n\r\n    <ListView\r\n        android:id=\"@+id/listView\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_below=\"@id/tvBaslik\"/>\r\n\r\n\r\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_show_image.xml	(revision 63665802b70ae2ca62d9ea326910ee01434d123b)
++++ app/src/main/res/layout/activity_show_image.xml	(date 1566819687019)
+@@ -20,11 +20,13 @@
+         android:gravity="center_horizontal"
+         android:textColor="@color/colorPrimaryDark"/>
+ 
+-    <ListView
+-        android:id="@+id/listView"
++
++    <androidx.recyclerview.widget.RecyclerView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+-        android:layout_below="@id/tvBaslik"/>
++        android:layout_below="@id/tvBaslik"
++        android:id="@+id/recyclerView"/>
++
+ 
+ 
+ </RelativeLayout>
+\ No newline at end of file

@@ -5,23 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cardview_shadow_start_color"
-    tools:context=".ShowImageActivity">
+    tools:context=".ListViewActivity">
 
 
     <TextView
         android:id="@+id/tvBaslik"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FOTOĞRAF ALBÜMÜ"
-        android:fontFamily="serif"
-        android:textSize="30sp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:fontFamily="serif"
         android:gravity="center_horizontal"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:onClick="fotoSec"
+        android:clickable="true"
+        android:text="FOTOĞRAF ALBÜMÜ"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="30sp" />
 
-    <ListView
-        android:id="@+id/listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvBaslik"/>

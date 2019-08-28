@@ -1,54 +1,87 @@
 package com.example.testgalleryimageparsing;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
+import java.util.List;
 
-public class MyAdapter extends BaseAdapter {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
+    RecyclerViewClickListener recyclerViewClickListener;
     Context context;
-    ArrayList<MyDataClass> arr;
+    List<MyDataClass> arr;
 
-    public MyAdapter(Context context, ArrayList<MyDataClass> arr) {
+    public MyAdapter(Context context, List<MyDataClass> arr, RecyclerViewClickListener recyclerViewClickListener) {
         this.context = context;
         this.arr = arr;
+        this.recyclerViewClickListener = recyclerViewClickListener;
+
     }
 
+    @NonNull
+    @Override
+    public MyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-
+        View view = LayoutInflater.from(context).inflate(R.layout.item_picture, parent, false);
+        ViewHolder holder = new ViewHolder(view, recyclerViewClickListener);
+        return holder;
+    }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(@NonNull MyAdapter.ViewHolder holder, int position) {
+
+        MyDataClass myDataClass = arr.get(position);
+        holder.showData(myDataClass, position);
+
+    }
+
+    @Override
+    public int getItemCount() {
         return arr.size();
     }
 
-    @Override
-    public Object getItem(int i) {
-        return i;
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+        ImageView ivImage;
+        TextView tvName;
+        private RecyclerViewClickListener recyclerViewClickListener;
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+        public ViewHolder(@NonNull View itemView, RecyclerViewClickListener recyclerViewClickListener) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            this.recyclerViewClickListener = recyclerViewClickListener;
 
-        view = LayoutInflater.from(context).inflate(R.layout.item_picture,viewGroup,false);
+            ivImage = itemView.findViewById(R.id.ivItemImage);
+            tvName = itemView.findViewById(R.id.tvItemName);
 
-        ImageView img = view.findViewById(R.id.ivItemImage);
-        TextView  tv = view.findViewById(R.id.tvItemName);
+        }
 
-        img.setImageBitmap(arr.get(i).getImage());
-        tv.setText(arr.get(i).getName());
+        @Override
+        public void onClick(View view) {
 
-        return view;
+            if(recyclerViewClickListener != null){
+                recyclerViewClickListener.onItemClick(getAdapterPosition());
+            }
+
+            Log.d("onItemClicked"," itemPos : "+getAdapterPosition());
+
+        }
+
+        public void showData(MyDataClass myDataClass, int position) {
+
+            this.tvName.setText(myDataClass.getName());
+            this.ivImage.setImageURI(myDataClass.getBase64());
+//            this.ivImage.setImageBitmap(BitMapUtil.stringToBitMap(myDataClass.getBase64()));
+
+        }
     }
 }
