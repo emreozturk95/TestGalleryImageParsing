@@ -1,6 +1,8 @@
 package com.example.testgalleryimageparsing;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,10 +19,15 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RecyclerViewActivity extends AppCompatActivity implements RecyclerViewClickListener {
@@ -31,7 +38,7 @@ public class RecyclerViewActivity extends AppCompatActivity implements RecyclerV
     RecyclerView recyclerView;
     CardView cardView;
     TextView tvBaslik;
-    Bitmap bitmap;
+
 
     private final int REQUEST = 23424;
 
@@ -58,8 +65,6 @@ public class RecyclerViewActivity extends AppCompatActivity implements RecyclerV
                     myAdapter.notifyDataSetChanged();
 
 
-
-
                 }
                 break;
         }
@@ -82,6 +87,38 @@ public class RecyclerViewActivity extends AppCompatActivity implements RecyclerV
         recyclerView.setAdapter(myAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+//        ----------------------------------------------
+
+
+//        URI TO STRING YAPMAK LAZIM
+
+        SharedPreferences sharedPref = getSharedPreferences("EMRE OZTURKKKKK", Context.MODE_PRIVATE);
+
+        String getJson = sharedPref.getString("jsonList", null);
+        if (getJson == null) {
+            return;
+        }
+
+        Gson gson = new Gson();
+
+      /*  MyDataClass[] myDataClasses = gson.fromJson(getJson, MyDataClass[].class);
+
+        List<MyDataClass> myDataClassList2 = Arrays.asList(myDataClasses);
+
+        */
+
+
+        Type type = new TypeToken<List<MyDataClass>>(){}.getType();
+        List<MyDataClass> myDataClass = gson.fromJson(getJson,type);
+
+        arrayList.addAll(myDataClass);
+
+//        List<MyDataClass> myDataClass = gson.fromJson(getJson,MyDataClass.class);
+
+//        arrayList.addAll(myDataClassList2);
+
+        myAdapter.notifyDataSetChanged();
 
 
     }

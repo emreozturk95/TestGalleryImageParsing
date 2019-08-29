@@ -1,6 +1,7 @@
 package com.example.testgalleryimageparsing;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +80,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public void showData(MyDataClass myDataClass, int position) {
 
             this.tvName.setText(myDataClass.getName());
-            this.ivImage.setImageURI(myDataClass.getBase64());
+            this.ivImage.setImageURI(Uri.parse((myDataClass.getBase64())));
 //            this.ivImage.setImageBitmap(BitMapUtil.stringToBitMap(myDataClass.getBase64()));
 
         }

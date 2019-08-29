@@ -10,7 +10,7 @@ public class BitMapUtil {
 
 
 
-    static public String bitMapToString(Bitmap bitmap) {
+    static public String bitMapTobase64(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] b = baos.toByteArray();
@@ -19,7 +19,7 @@ public class BitMapUtil {
     }
 
 
-    static public Bitmap stringToBitMap(String encodedString) {
+    static public Bitmap base64ToBitMap(String encodedString) {
 
         try {
             byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);

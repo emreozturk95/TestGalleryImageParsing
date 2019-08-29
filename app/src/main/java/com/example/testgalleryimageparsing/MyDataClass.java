@@ -5,20 +5,12 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MyDataClass implements Parcelable{
+public class MyDataClass implements Parcelable {
 
     private String name;
-    private Uri base64;
+    private String base64;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setBase64(Uri base64) {
-        this.base64 = base64;
-    }
-
-    public MyDataClass(String name, Uri base64)  {
+    public MyDataClass(String name, String base64) {
         this.name = name;
         this.base64 = base64;
     }
@@ -26,7 +18,18 @@ public class MyDataClass implements Parcelable{
 
     protected MyDataClass(Parcel in) {
         name = in.readString();
-        base64 = Uri.parse(in.readString());
+        base64 = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(base64);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<MyDataClass> CREATOR = new Creator<MyDataClass>() {
@@ -45,18 +48,8 @@ public class MyDataClass implements Parcelable{
         return name;
     }
 
-    public Uri getBase64() {
+    public String getBase64() {
         return base64;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(String.valueOf(base64));
-    }
 }
